@@ -45,4 +45,9 @@ public class PlayerHealth : MonoBehaviour
         healthBar.UpdateBar(currentHp, maxHp);
         print(lives);
     }
+
+    internal int GetLives()
+    {
+        return lives;
+    }
 }

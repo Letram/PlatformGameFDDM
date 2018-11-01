@@ -29,6 +29,10 @@ public class PlayerController : MonoBehaviour {
     {
         points += value;
     }
+    internal int GetScore()
+    {
+        return points;
+    }
 
     // Use this for initialization
     void Start () {
@@ -90,7 +94,7 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
-	void OnBecameInvisible(){
+    void OnBecameInvisible(){
         transform.position = spawnPoint;
         GetComponent<PlayerHealth>().ResetLife();
 	}
