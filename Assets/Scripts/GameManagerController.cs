@@ -8,6 +8,7 @@ public class GameManagerController : MonoBehaviour {
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI liveCounterText;
     public TextMeshProUGUI scoreText;
+    public GameObject finishPanel;
 
     private float startTime;
     private float t;
@@ -15,6 +16,8 @@ public class GameManagerController : MonoBehaviour {
     private string seconds;
     private string miliseconds;
     private bool finished;
+    private int finalScore;
+    private float finalTime;
     // Use this for initialization
     void Start () {
         player.GetComponent<PlayerController>().SetSpawn(Vector3.zero);
@@ -49,6 +52,10 @@ public class GameManagerController : MonoBehaviour {
     {
         finished = true;
         timerText.color = Color.yellow;
+        finalScore = player.GetComponent<PlayerController>().GetScore();
+        finalTime = t;
+        finishPanel.gameObject.GetComponent<LevelFinished>().Populate(finalTime, finalScore);
+        finishPanel.SetActive(true);
         Time.timeScale = 0;
     }
 }
