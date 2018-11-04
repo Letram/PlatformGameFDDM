@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour {
 	public float speed = 2f;
 	public bool grounded;
 	public float jumpPower = 6.5f;
-
+    public AudioClip[] clips;
 	private Rigidbody2D rb2d;
 
 
@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour {
     private bool movement = true;
     private bool invincible = false;
     private Vector3 spawnPoint;
+    private AudioSource audio;
+
     internal void SetSpawn(Vector3 spawn)
     {
         spawnPoint = spawn;
@@ -39,7 +41,8 @@ public class PlayerController : MonoBehaviour {
 		rb2d = GetComponent<Rigidbody2D>();
 		anim = GetComponent<Animator>();
 		spr = GetComponent<SpriteRenderer>();
-	}
+        audio = GetComponent<AudioSource>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -99,7 +102,7 @@ public class PlayerController : MonoBehaviour {
         GetComponent<PlayerHealth>().ResetLife();
 	}
 
-	public void EnemyJump(){
+    public void EnemyJump(){
 		jump = true;
 	}
 
@@ -109,7 +112,7 @@ public class PlayerController : MonoBehaviour {
          * */
 	public void EnemyKnockBack(float[] values){
 		jump = true;
-
+        PlaySound(1);
 		float side = Mathf.Sign(values[0] - transform.position.x);
 		rb2d.AddForce(Vector2.left * side * jumpPower, ForceMode2D.Impulse);
         if(!invincible)
@@ -122,7 +125,13 @@ public class PlayerController : MonoBehaviour {
 		spr.color = color;
 	}
 
-	void EnableMovement(){
+    internal void PlaySound(int index)
+    {
+        audio.clip = clips[index];
+        audio.Play();
+    }
+
+    void EnableMovement(){
 		movement = true;
         invincible = false;
 		spr.color = Color.white;

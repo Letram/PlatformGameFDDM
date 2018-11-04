@@ -18,17 +18,20 @@ public class GameManagerController : MonoBehaviour {
     private bool finished;
     private int finalScore;
     private float finalTime;
+    private AudioSource audio;
     // Use this for initialization
     void Start () {
         player.GetComponent<PlayerController>().SetSpawn(Vector3.zero);
         Time.timeScale = 1;
         startTime = Time.time;
         finished = false;
+        audio = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+        if (player.GetComponent<PlayerHealth>().GetLives() == -1)
+            Finished();
         if (!finished)
         {
             t = Time.time - startTime;
@@ -36,9 +39,9 @@ public class GameManagerController : MonoBehaviour {
             minutes = ((int)t / 60).ToString("00");
             seconds = (t % 60).ToString("00");
             miliseconds = ((int)(t * 100f) % 100).ToString("00");
+            DisplayTexts();
 
         }
-        DisplayTexts();
 	}
 
     private void DisplayTexts()
@@ -57,5 +60,6 @@ public class GameManagerController : MonoBehaviour {
         finishPanel.gameObject.GetComponent<LevelFinished>().Populate(finalTime, finalScore);
         finishPanel.SetActive(true);
         Time.timeScale = 0;
+        audio.Play();
     }
 }

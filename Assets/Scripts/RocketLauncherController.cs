@@ -1,18 +1,25 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RocketLauncherController : MonoBehaviour {
-    public float speed = 6f;
+    public float speed = 4f;
+    public float fireRate;
+
     public BombController bomb;
+
+    private AudioSource audio;
     private PlayerController player;
     private System.Boolean flipped;
     private bool hasParent;
+    private float nextFire;
 
     void Start()
     {
         flipped = false;
         hasParent = false;
+        audio = GetComponent<AudioSource>();
     }
 	// Update is called once per frame
 	void Update () {
@@ -37,12 +44,15 @@ public class RocketLauncherController : MonoBehaviour {
             Quaternion rotation = Quaternion.AngleAxis(alpha, Vector3.forward);
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, speed * Time.deltaTime);
 
-            if (Input.GetKeyDown(KeyCode.G) || Input.GetButton("Fire1"))
+            if (Input.GetButton("Fire1") && Time.time > nextFire)
             {
+                nextFire = Time.time + fireRate;
+                audio.Play();
                 Instantiate(bomb, transform.position, transform.rotation);
             }
         }
     }
+
 
     public void playerFlipped()
     {
@@ -56,6 +66,7 @@ public class RocketLauncherController : MonoBehaviour {
             player = collision.GetComponentInParent<PlayerController>();
             hasParent = true;
             gameObject.GetComponent <CircleCollider2D>().enabled = false;
+            player.PlaySound(0);
         }
     }
 }

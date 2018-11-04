@@ -6,12 +6,13 @@ public class EnemyController : MonoBehaviour {
 
 	public float maxSpeed = 1f;
 	public float speed = 1f;
-
+    public AudioSource enemyAudio;
 	private Rigidbody2D rb2d;
 
 	// Use this for initialization
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
+        enemyAudio = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -37,11 +38,25 @@ public class EnemyController : MonoBehaviour {
 			float yOffset = 0.4f;
 			if (transform.position.y + yOffset < col.transform.position.y){
 				col.GetComponentInParent<PlayerController>().SendMessage("EnemyJump");
-                col.GetComponentInParent<PlayerController>().earnPoints(100);
-				Destroy(gameObject);
+                StartCoroutine(EnemyDead(col.GetComponentInParent<PlayerController>(), 100));
 			} else {
                 col.GetComponentInParent<PlayerController>().SendMessage("EnemyKnockBack", new float[] { transform.position.x, 20 });
 			}
 		}
+        if (col.gameObject.CompareTag("Bomb"))
+        {
+            PlayerController player = GameObject.Find("Player").GetComponent<PlayerController>();
+            col.gameObject.GetComponent<BombController>().bombAnimator.SetTrigger("Explode");
+            StartCoroutine(EnemyDead(player, 50));
+        }
 	}
+
+    public IEnumerator EnemyDead(PlayerController player, int pointAmount)
+    {
+        player.earnPoints(pointAmount);
+        enemyAudio.Play();
+        gameObject.transform.position = new Vector3(-999,-999,0);
+        yield return new WaitForSeconds(enemyAudio.clip.length);
+        Destroy(gameObject);
+    }
 }

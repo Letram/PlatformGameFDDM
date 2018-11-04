@@ -4,26 +4,31 @@ using UnityEngine;
 
 public class BombController : MonoBehaviour {
 
+    public Animator bombAnimator;
     private Rigidbody2D bombBody;
-    private Animator bombAnimator;
     private Vector2 direction;
+    private AudioSource audio;
+    private bool explode;
 	// Use this for initialization
 	void Start () {
+        audio = GetComponent<AudioSource>();
         bombBody = GetComponent<Rigidbody2D>();
         bombAnimator = GetComponent<Animator>();
         direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         launch();
-        Destroy(gameObject, 4f);
 	}
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        switch (collision.gameObject.tag)
         {
-            bombBody.isKinematic = true;
-            bombBody.velocity = new Vector2(0,0);
-            bombAnimator.SetTrigger("Explode");
+            case "Ground":
+                bombBody.velocity = new Vector2(0, 0);
+                bombAnimator.SetTrigger("Explode");
+                break;
         }
+        
+        
     }
     public void launch()
     {
@@ -33,4 +38,11 @@ public class BombController : MonoBehaviour {
     {
         Destroy(gameObject);
     }
+
+    private void PlaySound()
+    {
+        if(gameObject != null)
+            audio.Play();
+    }
+
 }
