@@ -5,12 +5,14 @@ using UnityEngine;
 using TMPro;
 public class GameManagerController : MonoBehaviour {
     public GameObject player;
+    public RocketLauncherController rocketLauncher;
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI liveCounterText;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI ammoText;
+    public GameObject ammoPanel;
     public GameObject finishPanel;
-
-    private float startTime;
+    public float startTime = 600;
     private float t;
     private string minutes;
     private string seconds;
@@ -23,7 +25,7 @@ public class GameManagerController : MonoBehaviour {
     void Start () {
         player.GetComponent<PlayerController>().SetSpawn(Vector3.zero);
         Time.timeScale = 1;
-        startTime = Time.time;
+        //startTime = Time.time;
         finished = false;
         audio = GetComponent<AudioSource>();
 	}
@@ -34,7 +36,7 @@ public class GameManagerController : MonoBehaviour {
             Finished();
         if (!finished)
         {
-            t = Time.time - startTime;
+            t = startTime - Time.time;
 
             minutes = ((int)t / 60).ToString("00");
             seconds = (t % 60).ToString("00");
@@ -49,6 +51,12 @@ public class GameManagerController : MonoBehaviour {
         timerText.text = minutes + ":" + seconds + ":" + miliseconds;
         liveCounterText.text = player.GetComponent<PlayerHealth>().GetLives().ToString();
         scoreText.text = player.GetComponent<PlayerController>().GetScore().ToString();
+        if (player.GetComponent<PlayerController>().isWeaponPicked())
+        {
+            ammoPanel.SetActive(true);
+        }
+        ammoText.text = rocketLauncher.getAmmo().ToString();
+        //print(player.GetComponentInChildren<RocketLauncherController>().getAmmo().ToString());
     }
 
     private void Finished()

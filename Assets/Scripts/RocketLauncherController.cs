@@ -6,7 +6,7 @@ using UnityEngine;
 public class RocketLauncherController : MonoBehaviour {
     public float speed = 4f;
     public float fireRate;
-
+    public int ammo = 5;
     public BombController bomb;
 
     private AudioSource audio;
@@ -46,13 +46,21 @@ public class RocketLauncherController : MonoBehaviour {
 
             if (Input.GetButton("Fire1") && Time.time > nextFire)
             {
-                nextFire = Time.time + fireRate;
-                audio.Play();
-                Instantiate(bomb, transform.position, transform.rotation);
+                if(ammo > 0)
+                {
+                    nextFire = Time.time + fireRate;
+                    audio.Play();
+                    Instantiate(bomb, transform.position, transform.rotation);
+                    ammo--;
+                }
             }
         }
     }
 
+    internal int getAmmo()
+    {
+        return ammo;
+    }
 
     public void playerFlipped()
     {
@@ -66,6 +74,8 @@ public class RocketLauncherController : MonoBehaviour {
             player = collision.GetComponentInParent<PlayerController>();
             hasParent = true;
             gameObject.GetComponent <CircleCollider2D>().enabled = false;
+            gameObject.GetComponent<Animator>().enabled = false;
+            player.setWeaponPicked(true);
             player.PlaySound(0);
         }
     }

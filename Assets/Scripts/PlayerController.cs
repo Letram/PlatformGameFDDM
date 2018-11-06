@@ -10,9 +10,8 @@ public class PlayerController : MonoBehaviour {
 	public bool grounded;
 	public float jumpPower = 6.5f;
     public AudioClip[] clips;
+
 	private Rigidbody2D rb2d;
-
-
     private Animator anim;
 	private SpriteRenderer spr;
 	private bool jump;
@@ -22,7 +21,7 @@ public class PlayerController : MonoBehaviour {
     private bool invincible = false;
     private Vector3 spawnPoint;
     private AudioSource audio;
-
+    private bool weaponPicked = false;
     internal void SetSpawn(Vector3 spawn)
     {
         spawnPoint = spawn;
@@ -137,4 +136,12 @@ public class PlayerController : MonoBehaviour {
 		spr.color = Color.white;
 	}
 
+    internal bool isWeaponPicked()
+    {
+        return weaponPicked;
+    }
+    public void setWeaponPicked(bool weaponPicked)
+    {
+        this.weaponPicked = weaponPicked;
+    }
 }
