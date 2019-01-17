@@ -16,12 +16,6 @@ public class PlayerHealth : MonoBehaviour
         currentHp = maxHp;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     internal void DealDmg(float v)
     {
         currentHp -= (int)v;
@@ -41,6 +35,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void OneUp()
     {
+        lives++;
         currentHp = maxHp;
         healthBar.UpdateBar(currentHp, maxHp);
         print(lives);
